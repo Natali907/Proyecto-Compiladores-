@@ -1,7 +1,5 @@
-import codecs
-import os
+
 import re
-import sys
 
 import ply.lex as lex
 
@@ -9,7 +7,7 @@ reservadas = ['BEGIN', 'END', 'IF', 'THEN', 'WHILE', 'DO', 'CALL', 'CONST',
               'VAR', 'PROCEDURE', 'OUT', 'IN', 'ELSE'
               ]
 
-tokens = list(reservadas+['ID', 'NUMERO', 'SUMA', 'RESTA', 'MULTIPLICACION',
+tokens = list(reservadas+['IDENTIFICADOR', 'NUMERO', 'SUMA', 'RESTA', 'MULTIPLICACION',
                           'DIVISION',
                           'PAR', 'ASIGNACION', 'DIFERENTE', 'MENOR', 'MENORQUE',
                           'MAYOR', 'MAYORQUE',
@@ -37,7 +35,7 @@ t_PUNTO = r'\.'
 t_IGUAL = r':='
 
 
-def t_ID(t):
+def t_IDENTIFICADOR(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
     if t.value.upper() in reservadas:
         t.value = t.value.upper()
@@ -67,26 +65,17 @@ def t_error(t):
     return "Caracter Ilegal"
 
 
-resultado_analizador = []
-
-
 def analizador(cadena):
+    resultado_analizador = []
     analizador = lex.lex()
+    print(analizador)
     analizador.input(cadena)
     while True:
         tok = analizador.token()
+        print(tok)
         if not tok:
             break
         resultado_analizador.append("Número línea: "+str(tok.lineno) + " "+str(tok.type) +
                                     " "+str(tok.value)
                                     )
     return resultado_analizador
-
-
-"""
-resultado = analizador(cadena3)
-
-for dato in resultado:
-    print(dato)
-
-"""
